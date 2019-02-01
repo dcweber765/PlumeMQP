@@ -333,13 +333,25 @@ def writeSensorData():
 
 def goForwardDistance(inch):
 
-    rc.ResetEncoders(address)
-    rc.ForwardMixed(address, 0)
-    rc.TurnRightMixed(address, 0)
-    diameter = 2.975
-    circ = diameter*math.pi
-    #countPerInch = 1253/(2.975*math.pi)
 
+    countPerInch = 1253/(2.975*math.pi)
+    EndPos = inch*countPerInch
+
+    accel = 32000
+    speed = 12000
+    deccel = 32000
+
+    accel1 = accel
+    speed1 = speed
+    deccel1 = deccel
+    position1 = EndPos
+    accel2 = accel
+    speed2 = speed
+    deccel2 = deccel
+    position2 = EndPos
+    buffer = 0
+
+    rc.SpeedAccelDeccelPositionM1M2(address,accel1,speed1,deccel1,position1,accel2,speed2,deccel2,position2,buffer)
     #INCHdist = feet/12
 
 #    while distanceAVG < inch:
