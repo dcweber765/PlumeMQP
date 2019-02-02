@@ -25,7 +25,7 @@ ser1.flushInput()
 ser2.flushInput()
 ser3.flushInput()
 time.sleep(1)
-ser0.write(b'G\r\n')
+ser0.write(b'G\r\n') #Calibrate CO2 sensors to ~350 ppm
 ser1.write(b'G\r\n')
 ser2.write(b'G\r\n')
 ser3.write(b'G\r\n')
@@ -46,7 +46,8 @@ rc.TurnRightMixed(address, 0)
 # IMU startup
 if not bno.begin():
     raise RuntimeError('Failed to initialize BNO055! Is the sensor connected?')
-
+#IMU should be connected to I2C of PI see IMU docs
+#https://learn.adafruit.com/adafruit-bno055-absolute-orientation-sensor/python-circuitpython
 
 
 # Print system status and self test result.
@@ -98,7 +99,10 @@ firstMeas = True
 print "Initial Conditions are VL = ", vl_i, ", VR = ", vr_i, ", x = ", x_i, ", y = ,", y_i, ", theta = ", theta_i,
 
 
-def ekf(vl, vr, Z, ts):
+def ekf(vl, vr, Z, ts): #EKF function
+#vl is velocity of left wheel
+#vr is velocity of right wheel
+#Z is the low pass filter (not used as of 2/1/19)
     global xhat
     global P
 
@@ -145,6 +149,7 @@ def lowpassfilter(Z, Z_filt):
 
 
 def turnLeft(speed, goal):
+    #Turn Left using PWM speed control and IMU data
     goal = goal
     heading, roll, pitch = bno.read_euler()
     CurrentHeading = heading
@@ -158,6 +163,7 @@ def turnLeft(speed, goal):
     #time.sleep(.25)
 
 def turnRight(speed, goal):
+    #Turn Right using PWM speed control and IMU data
     goal = goal
     heading, roll, pitch = bno.read_euler()
     CurrentHeading = heading
@@ -171,7 +177,7 @@ def turnRight(speed, goal):
     #time.sleep(.25)
 
 def C02Angle(fltCo20,fltCo21,fltCo22,fltCo23):
-
+    #Find the angle between 2 highest sensors see "Code Diagram.png"
     D = 15.5
     c = 11.25
     B = math.pi/4
@@ -268,6 +274,7 @@ def angle(sensor1,sensor2):
 
 
 def displayspeed():
+    #Print positon and velocity data from roboClaw
 	enc1 = rc.ReadEncM1(address)
 	enc2 = rc.ReadEncM2(address)
 	speed1 = rc.ReadSpeedM1(address)
@@ -297,6 +304,7 @@ def displayspeed():
 		print "failed "
 
 def writeSensorData():
+    #Print sensor data to consol
     heading, roll, pitch = bno.read_euler()
     accelX, accelY, accelZ  = bno.read_accelerometer()
     gyroX, gyroY, gyroZ = bno.read_gyroscope()
@@ -326,15 +334,15 @@ def writeSensorData():
     # print 'Encoder2 = ',enc1[2]
     print('Heading={0:0.2F} Roll={1:0.2F} Pitch={2:0.2F}'.format(heading, roll, pitch))
     print('accelX={0:0.2F} accelY={1:0.2F} accelZ={2:0.2F}'.format(accelX, accelY, accelZ))
-    print 'CO2 PPM   =', fltCo20 *10
+    print 'CO2 PPM   =', fltCo20 *10 #multipler is given from manufacture
     print 'CO2 PPM 2 =', fltCo21 *10 # multiplierZ
     print 'CO2 PPM 3 =', fltCo22 *10 # multiplierZ
     print 'CO2 PPM 4 =', fltCo23 *10 # multiplierZ
 
 def goForwardDistance(inch):
-
-
-    countPerInch = 1253/(2.975*math.pi)
+    #Using built in roboclaw PID go a distance
+    rc.ResetEncoders()
+    countPerInch = 1253/(2.975*math.pi) #1253 counts per revoultion of wheel, wheel diameter is 2.975in
     EndPos = inch*countPerInch
 
     accel = 32000
