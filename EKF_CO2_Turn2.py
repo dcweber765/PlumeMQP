@@ -158,7 +158,7 @@ def turnLeft(speed, goal):
         heading, roll, pitch = bno.read_euler()
         #print goal
         #print heading
-        rc.TurnLeftMixed(address, 10)
+        rc.TurnLeftMixed(address, speed)
     rc.TurnLeftMixed(address,0)
     #time.sleep(.25)
 
@@ -172,7 +172,7 @@ def turnRight(speed, goal):
         heading, roll, pitch = bno.read_euler()
         #print goal
         #print heading
-        rc.TurnRightMixed(address, 10)
+        rc.TurnRightMixed(address, speed)
     rc.TurnRightMixed(address, 0)
     #time.sleep(.25)
 
@@ -412,6 +412,7 @@ while(i < 2):
         resp3 = resp3[:8]
         fltCo23 = float(resp3[2:])
         C02Angle(fltCo20,fltCo21,fltCo22,fltCo23)
+        goForwardDistance(6)
         time.sleep(.25)
 
     # heading, roll, pitch = bno.read_euler()
