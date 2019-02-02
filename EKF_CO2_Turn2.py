@@ -158,8 +158,8 @@ def turnLeft(speed, goal):
         heading, roll, pitch = bno.read_euler()
         #print goal
         #print heading
-        rc.TurnLeftMixed(address, speed)
-    rc.TurnLeftMixed(address,0)
+        rc.TurnRightMixed(address, speed)
+    rc.TurnRightMixed(address,0)
     #time.sleep(.25)
 
 def turnRight(speed, goal):
@@ -172,8 +172,8 @@ def turnRight(speed, goal):
         heading, roll, pitch = bno.read_euler()
         #print goal
         #print heading
-        rc.TurnRightMixed(address, speed)
-    rc.TurnRightMixed(address, 0)
+        rc.TurnLeftMixed(address, speed)
+    rc.TurnLeftMixed(address, 0)
     #time.sleep(.25)
 
 def C02Angle(fltCo20,fltCo21,fltCo22,fltCo23):
@@ -341,13 +341,15 @@ def writeSensorData():
 
 def goForwardDistance(inch):
     #Using built in roboclaw PID go a distance
-    rc.ResetEncoders()
+    rc.ResetEncoders(address)
+    displayspeed()
+    print "move forward"
     countPerInch = 1253/(2.975*math.pi) #1253 counts per revoultion of wheel, wheel diameter is 2.975in
-    EndPos = inch*countPerInch
+    EndPos = long(inch*countPerInch)
 
-    accel = 32000
-    speed = 12000
-    deccel = 32000
+    accel = long(32000)
+    speed = long(12000)
+    deccel = long(32000)
 
     accel1 = accel
     speed1 = speed
@@ -357,9 +359,11 @@ def goForwardDistance(inch):
     speed2 = speed
     deccel2 = deccel
     position2 = EndPos
-    buffer = 0
+    buffer = long(0)
 
     rc.SpeedAccelDeccelPositionM1M2(address,accel1,speed1,deccel1,position1,accel2,speed2,deccel2,position2,buffer)
+    displayspeed()
+    print "end move"
     #INCHdist = feet/12
 
 #    while distanceAVG < inch:
@@ -398,19 +402,19 @@ while(i < 2):
         ser0.write(b'Z\r\n')
         resp0 = (ser0.read(10))
         resp0 = resp0[:8]
-        fltCo20 = float(resp0[2:])
+        fltCo20 = float(resp0[2:])*10
         ser1.write(b'Z\r\n')
         resp1 = ser1.read(10)
         resp1 = resp1[:8]
-        fltCo21 = float(resp1[2:])
+        fltCo21 = float(resp1[2:])*10
         ser2.write(b'Z\r\n')
         resp2 = ser2.read(10)
         resp2 = resp2[:8]
-        fltCo22 = float(resp2[2:])
+        fltCo22 = float(resp2[2:])*10
         ser3.write(b'Z\r\n')
         resp3 = ser3.read(10)
         resp3 = resp3[:8]
-        fltCo23 = float(resp3[2:])
+        fltCo23 = float(resp3[2:])*10
         C02Angle(fltCo20,fltCo21,fltCo22,fltCo23)
         goForwardDistance(6)
         time.sleep(.25)
