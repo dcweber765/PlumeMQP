@@ -210,42 +210,42 @@ def C02Angle(fltCo20,fltCo21,fltCo22,fltCo23):
 
 	if position[i] == 1 & position[i+1] == 2:
 		goalie = angle(fltCo20,fltCo21)
-        turnLeft(32,angle(sortedvalues[0],sortedvalues[1]))
+        turnLeft(32,angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2]))
         break
 
 	if position[i] == 1 & position[i+1] == 4:
-		goal2 = angle(fltCo20,fltCo23)
-        turnRight(32,angle(fltCo20,fltCo23))
+		goal2 = angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2])
+        turnRight(32,angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2]))
         break
 
 	if position[i] == 2 & position[i+1] == 1:
-		goal2 = 90-angle(fltCo21,fltCo20)
-        turnLeft(32,90-angle(fltCo21,fltCo20))
+		goal2 = 90-angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2])
+        turnLeft(32,90-angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2]))
         break
 
 	if position[i] == 2 & position[i+1] == 3:
-		goal2 = 90+angle(fltCo21,fltCo22)
-        turnLeft(32,90+angle(fltCo21,fltCo22))
+		goal2 = 90+angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2])
+        turnLeft(32,90+angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2]))
         break
 
 	if position[i] == 3 & position[i+1] == 2:
-		goal2 = 180-angle(fltCo22,fltCo21)
-        turnLeft(32,180-angle(fltCo22,fltCo21))
+		goal2 = 180-angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2])
+        turnLeft(32,180-angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2]))
         break
 
 	if position[i] == 3 & position[i+1] == 4:
-		goal2 = 180-angle(fltCo22,fltCo23)
-        turnRight(32,180-angle(fltCo22,fltCo23))
+		goal2 = 180-angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2])
+        turnRight(32,180-angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2]))
         break
 
 	if position[i] == 4 & position[i+1] == 1:
-		goal2 = 90-angle(fltCo23,fltCo20)
-        turnRight(32,90-angle(fltCo23,fltCo20))
+		goal2 = 90-angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2])
+        turnRight(32,90-angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2]))
         break
 
 	if (position[i] == 4 & position[i+1] == 3):
-		goal2 = 90+angle(fltCo23,fltCo22)
-        turnRight(32,90+angle(fltCo23,fltCo22))
+		goal2 = 90+angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2])
+        turnRight(32,90+angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2]))
         break
 #        goal = heading
 
@@ -386,38 +386,38 @@ print('Recoding CO2 data')
 
 i = 0
 
-while(i < 2):
+    while(i < 2):
     #rc.ForwardMixed(address, 45)
     #goForwardDistance(18)
-    for j in range(10):
-        speed1 = rc.ReadSpeedM1(address)[1]
-        speed2 = rc.ReadSpeedM2(address)[1]
-        accelX, accelY, accelZ  = bno.read_accelerometer()
-        gyroX, gyroY, gyroZ = bno.read_gyroscope()
-        Z = matrix([[float(accelX)], [float(accelY)], [float(gyroZ)]])
-        ts = .05
-        ekf(speed1, speed2, Z, ts)
-        #rc.ForwardMixed(address, 45)
-        writeSensorData()
-        ser0.write(b'Z\r\n')
-        resp0 = (ser0.read(10))
-        resp0 = resp0[:8]
-        fltCo20 = float(resp0[2:])*10
-        ser1.write(b'Z\r\n')
-        resp1 = ser1.read(10)
-        resp1 = resp1[:8]
-        fltCo21 = float(resp1[2:])*10
-        ser2.write(b'Z\r\n')
-        resp2 = ser2.read(10)
-        resp2 = resp2[:8]
-        fltCo22 = float(resp2[2:])*10
-        ser3.write(b'Z\r\n')
-        resp3 = ser3.read(10)
-        resp3 = resp3[:8]
-        fltCo23 = float(resp3[2:])*10
-        C02Angle(fltCo20,fltCo21,fltCo22,fltCo23)
-        goForwardDistance(6)
-        time.sleep(.25)
+for j in range(10):
+    speed1 = rc.ReadSpeedM1(address)[1]
+    speed2 = rc.ReadSpeedM2(address)[1]
+    accelX, accelY, accelZ  = bno.read_accelerometer()
+    gyroX, gyroY, gyroZ = bno.read_gyroscope()
+    Z = matrix([[float(accelX)], [float(accelY)], [float(gyroZ)]])
+    ts = .05
+    ekf(speed1, speed2, Z, ts)
+    #rc.ForwardMixed(address, 45)
+    writeSensorData()
+    ser0.write(b'Z\r\n')
+    resp0 = (ser0.read(10))
+    resp0 = resp0[:8]
+    fltCo20 = float(resp0[2:])*10
+    ser1.write(b'Z\r\n')
+    resp1 = ser1.read(10)
+    resp1 = resp1[:8]
+    fltCo21 = float(resp1[2:])*10
+    ser2.write(b'Z\r\n')
+    resp2 = ser2.read(10)
+    resp2 = resp2[:8]
+    fltCo22 = float(resp2[2:])*10
+    ser3.write(b'Z\r\n')
+    resp3 = ser3.read(10)
+    resp3 = resp3[:8]
+    fltCo23 = float(resp3[2:])*10
+    C02Angle(fltCo20,fltCo21,fltCo22,fltCo23)
+    goForwardDistance(6)
+    time.sleep(.25)
 
     # heading, roll, pitch = bno.read_euler()
     # #rc.ForwardMixed(address, 0)
