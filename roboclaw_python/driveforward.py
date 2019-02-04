@@ -54,8 +54,8 @@ eightinch = oneinch*8;
 nineinch = oneinch*9;
 teninch = oneinch*10;
 
-rc.SpeedAccelDistanceM1(address,6000,6000,421.176471,1);
-rc.SpeedAccelDistanceM2(address,6000,6000,421.176471,1);
+rc.SpeedAccelDistanceM1(address,6000,6000,421,1);
+rc.SpeedAccelDistanceM2(address,6000,6000,421,1);
 buffers = (0,0,0)
 while(buffers[1]!=0x80 and buffers[2]!=0x80):	#Loop until distance command has completed
 	displayspeed();
