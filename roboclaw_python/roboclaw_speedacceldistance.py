@@ -49,10 +49,8 @@ else:
 	print repr(version[1])
 
 while(1):
-	rc.SpeedAccelDistanceM1(address,12000,12000,42000,1);
-	rc.SpeedAccelDistanceM2(address,12000,-12000,42000,1);
-	rc.SpeedAccelDistanceM1(address,12000,0,0,0);  #distance travelled is v*v/2a = 12000*12000/2*48000 = 1500
-	rc.SpeedAccelDistanceM2(address,12000,0,0,0);  #that makes the total move in one direction 48000
+	rc.SpeedAccelDistanceM1(address,6000,6000,10000,1);
+	rc.SpeedAccelDistanceM2(address,6000,-6000,10000,1);
 	buffers = (0,0,0)
 	while(buffers[1]!=0x80 and buffers[2]!=0x80):	#Loop until distance command has completed
 		displayspeed();
