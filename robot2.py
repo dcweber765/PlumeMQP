@@ -116,23 +116,29 @@ def lowpassfilter(Z, Z_filt):
 
 
 
-def turnLeft(speed, goal):
+def turnLeft(speed, TurnAng):
     #Turn Left using PWM speed control and IMU data
     heading, roll, pitch = bno.read_euler()
     CurrentHeading = heading
-    print "left", goal+CurrentHeading
-    while not(CurrentHeading+goal-5 <= heading <= CurrentHeading+goal+5): #+
+    goal = TurnAng + CurrentHeading
+    if goal > 360:
+        goal = goal - 360
+    print "left", goal
+    while not(goal-5 <= heading <= goal+5): #+
         heading, roll, pitch = bno.read_euler()
         rc.TurnRightMixed(address, speed)
     rc.TurnRightMixed(address,0)
     time.sleep(.1)
 
-def turnRight(speed, goal):
+def turnRight(speed, TurnAng):
     #Turn Right using PWM speed control and IMU data
     heading, roll, pitch = bno.read_euler()
     CurrentHeading = heading
-    print "Rigth", goal-CurrentHeading
-    while not(CurrentHeading-goal-5 <= heading <= CurrentHeading-goal+5): #-
+    goal = TurnAng + CurrentHeading
+    if goal > 360:
+        goal = goal - 360
+    print "Right", goal
+    while not(goal-5 <= heading <= goal+5): #-
         heading, roll, pitch = bno.read_euler()
         rc.TurnLeftMixed(address, speed)
     rc.TurnLeftMixed(address, 0)
@@ -150,64 +156,79 @@ def C02Angle(Co2_0,Co2_1,Co2_2,Co2_3):
 
     sortedvalues = sorted(inital, reverse=True)
     print sortedvalues
-    i = 0
-    position = [1,2,3,4]
-    i = 0
-    while i < 4:
-        if sortedvalues[i] == Co2_0:
-            position[i] = 1
+    if sortedvalues[i] == Co2_0:
+        rc.ForwardMixed(address, 45)
+        print "Case 1"
 
-        elif sortedvalues[i] == Co2_1:
-            position[i] = 2
+    if sortedvalues[i] == Co2_1:
+        turnRight(32, 90)
+        print "Case 2"
 
-        elif sortedvalues[i] == Co2_2:
-            position[i] = 3
+    if sortedvalues[i] == Co2_2:
+        turnLeft(32, 90)
+        print "Case 3"
 
-        elif sortedvalues[i] == Co2_3:
-            position[i] = 4
-
-        i = i + 1
-
-    i = 1
-
-    if position[i] == 1 & position[i+1] == 2:
-        print "1 2\n"
-        turnLeft(32,angle(sortedvalues[0],sortedvalues[1]))
-
-
-    if position[i] == 1 & position[i+1] == 4:
-        print "1 4\n"
-        turnRight(32,angle(sortedvalues[0],sortedvalues[1]))
-
-
-    if position[i] == 2 & position[i+1] == 1:
-        print "2 1\n"
-        turnLeft(32,90-angle(sortedvalues[0],sortedvalues[1]))
-
-
-    if position[i] == 2 & position[i+1] == 3:
-        print "2 3\n"
-        turnLeft(32,90+angle(sortedvalues[0],sortedvalues[1]))
-
-
-    if position[i] == 3 & position[i+1] == 2:
-        print "3 2\n"
-        turnLeft(32,180-angle(sortedvalues[0],sortedvalues[1]))
-
-
-    if position[i] == 3 & position[i+1] == 4:
-        print "3 4\n"
-        turnRight(32,180-angle(sortedvalues[0],sortedvalues[1]))
-
-
-    if position[i] == 4 & position[i+1] == 1:
-        print "4 1\n"
-        turnRight(32,90-angle(sortedvalues[0],sortedvalues[1]))
-
-
-    if (position[i] == 4 & position[i+1] == 3):
-        print "4 3\n"
-        turnRight(32,90+angle(sortedvalues[0],sortedvalues[1]))
+    if sortedvalues[i] == Co2_3:
+        turnLeft(32, 180)
+        print "Case 4"
+    # i = 0
+    # position = [1,2,3,4]
+    # i = 0
+    # while i < 4:
+    #     if sortedvalues[i] == Co2_0:
+    #         position[i] = 1
+    #
+    #     elif sortedvalues[i] == Co2_1:
+    #         position[i] = 2
+    #
+    #     elif sortedvalues[i] == Co2_2:
+    #         position[i] = 3
+    #
+    #     elif sortedvalues[i] == Co2_3:
+    #         position[i] = 4
+    #
+    #     i = i + 1
+    #
+    # i = 1
+    #
+    # if position[i] == 1 & position[i+1] == 2:
+    #     print "1 2\n"
+    #     turnLeft(32,angle(sortedvalues[0],sortedvalues[1]))
+    #
+    #
+    # if position[i] == 1 & position[i+1] == 4:
+    #     print "1 4\n"
+    #     turnRight(32,angle(sortedvalues[0],sortedvalues[1]))
+    #
+    #
+    # if position[i] == 2 & position[i+1] == 1:
+    #     print "2 1\n"
+    #     turnLeft(32,90-angle(sortedvalues[0],sortedvalues[1]))
+    #
+    #
+    # if position[i] == 2 & position[i+1] == 3:
+    #     print "2 3\n"
+    #     turnLeft(32,90+angle(sortedvalues[0],sortedvalues[1]))
+    #
+    #
+    # if position[i] == 3 & position[i+1] == 2:
+    #     print "3 2\n"
+    #     turnLeft(32,180-angle(sortedvalues[0],sortedvalues[1]))
+    #
+    #
+    # if position[i] == 3 & position[i+1] == 4:
+    #     print "3 4\n"
+    #     turnRight(32,180-angle(sortedvalues[0],sortedvalues[1]))
+    #
+    #
+    # if position[i] == 4 & position[i+1] == 1:
+    #     print "4 1\n"
+    #     turnRight(32,90-angle(sortedvalues[0],sortedvalues[1]))
+    #
+    #
+    # if (position[i] == 4 & position[i+1] == 3):
+    #     print "4 3\n"
+    #     turnRight(32,90+angle(sortedvalues[0],sortedvalues[1]))
 
 
 def angle(sensor1,sensor2):
