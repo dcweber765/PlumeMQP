@@ -6,9 +6,9 @@ import time
 from roboclaw import Roboclaw
 
 #Windows comport name
-rc = Roboclaw("COM3",115200)
+#rc = Roboclaw("COM3",115200)
 #Linux comport name
-#rc = Roboclaw("/dev/ttyACM0",115200)
+rc = Roboclaw("/dev/ttyACM0",115200)
 
 def displayspeed():
 	enc1 = rc.ReadEncM1(address)
@@ -57,7 +57,7 @@ while(1):
 	while(buffers[1]!=0x80 and buffers[2]!=0x80):	#Loop until distance command has completed
 		displayspeed();
 		buffers = rc.ReadBuffers(address);
-  
+
 	time.sleep(1)
 
 	rc.SpeedAccelDistanceM1(address,48000,-12000,46500,1);
@@ -68,5 +68,5 @@ while(1):
 	while(buffers[1]!=0x80 and buffers[2]!=0x80):	#Loop until distance command has completed
 		displayspeed()
 		buffers = rc.ReadBuffers(address)
-  
+
 	time.sleep(1);  #When no second command is given the motors will automatically slow down to 0 which takes 1 second
