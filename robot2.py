@@ -171,34 +171,42 @@ def C02Angle(Co2_0,Co2_1,Co2_2,Co2_3):
     i = 1
 
     if position[i] == 1 & position[i+1] == 2:
+        print "1 2\n"
         turnLeft(32,angle(sortedvalues[0],sortedvalues[1]))
 
 
     if position[i] == 1 & position[i+1] == 4:
+        print "1 4\n"
         turnRight(32,angle(sortedvalues[0],sortedvalues[1]))
 
 
     if position[i] == 2 & position[i+1] == 1:
+        print "2 1\n"
         turnLeft(32,90-angle(sortedvalues[0],sortedvalues[1]))
 
 
     if position[i] == 2 & position[i+1] == 3:
+        print "2 3\n"
         turnLeft(32,90+angle(sortedvalues[0],sortedvalues[1]))
 
 
     if position[i] == 3 & position[i+1] == 2:
+        print "3 2\n"
         turnLeft(32,180-angle(sortedvalues[0],sortedvalues[1]))
 
 
     if position[i] == 3 & position[i+1] == 4:
+        print "3 4\n"
         turnRight(32,180-angle(sortedvalues[0],sortedvalues[1]))
 
 
     if position[i] == 4 & position[i+1] == 1:
+        print "4 1\n"
         turnRight(32,90-angle(sortedvalues[0],sortedvalues[1]))
 
 
     if (position[i] == 4 & position[i+1] == 3):
+        print "4 3\n"
         turnRight(32,90+angle(sortedvalues[0],sortedvalues[1]))
 
 
@@ -321,14 +329,14 @@ def main():
     startup()
 
     print "waiting"
-    time.sleep(5)
+    time.sleep(10)
     print "GO!"
     for j in range(5):
         printSensorData()
         time.sleep(.1)
         Co2_0, Co2_1, Co2_2, Co2_3 = getCO2Data()
         C02Angle(Co2_0, Co2_1, Co2_2, Co2_3)
-        driveForward(3)
+        driveForward(1)
         time.sleep(.5)
         accelX, accelY, accelZ  = bno.read_accelerometer()
         gyroX, gyroY, gyroZ = bno.read_gyroscope()
