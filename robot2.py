@@ -165,42 +165,42 @@ def C02Angle(Co2_0,Co2_1,Co2_2,Co2_3):
 
         elif sortedvalues[i] == Co2_3:
             position[i] = 4
+
         i = i + 1
 
+    i = 1
 
-	i = 1
-
-	if position[i] == 1 & position[i+1] == 2:
+    if position[i] == 1 & position[i+1] == 2:
         turnLeft(32,angle(sortedvalues[0],sortedvalues[1]))
-        break
+        return
 
-	if position[i] == 1 & position[i+1] == 4:
+    if position[i] == 1 & position[i+1] == 4:
         turnRight(32,angle(sortedvalues[0],sortedvalues[1]))
-        break
+        return
 
-	if position[i] == 2 & position[i+1] == 1:
+    if position[i] == 2 & position[i+1] == 1:
         turnLeft(32,90-angle(sortedvalues[0],sortedvalues[1]))
-        break
+        return
 
-	if position[i] == 2 & position[i+1] == 3:
+    if position[i] == 2 & position[i+1] == 3:
         turnLeft(32,90+angle(sortedvalues[0],sortedvalues[1]))
-        break
+        return
 
-	if position[i] == 3 & position[i+1] == 2:
+    if position[i] == 3 & position[i+1] == 2:
         turnLeft(32,180-angle(sortedvalues[0],sortedvalues[1]))
-        break
+        return
 
-	if position[i] == 3 & position[i+1] == 4:
+    if position[i] == 3 & position[i+1] == 4:
         turnRight(32,180-angle(sortedvalues[0],sortedvalues[1]))
-        break
+        return
 
-	if position[i] == 4 & position[i+1] == 1:
+    if position[i] == 4 & position[i+1] == 1:
         turnRight(32,90-angle(sortedvalues[0],sortedvalues[1]))
-        break
+        return
 
-	if (position[i] == 4 & position[i+1] == 3):
+    if (position[i] == 4 & position[i+1] == 3):
         turnRight(32,90+angle(sortedvalues[0],sortedvalues[1]))
-        break
+        return
 
 def angle(sensor1,sensor2):
 
@@ -221,33 +221,33 @@ def angle(sensor1,sensor2):
 def displayspeed():
     #Print positon and velocity data from roboClaw
     #function is given from roboclaw examples
-	enc1 = rc.ReadEncM1(address)
-	enc2 = rc.ReadEncM2(address)
-	speed1 = rc.ReadSpeedM1(address)
-	speed2 = rc.ReadSpeedM2(address)
+    enc1 = rc.ReadEncM1(address)
+    enc2 = rc.ReadEncM2(address)
+    speed1 = rc.ReadSpeedM1(address)
+    speed2 = rc.ReadSpeedM2(address)
     #one rotation is 1253
-	print("Encoder1:"),
-	if(enc1[0]==1):
-		print enc1[1],
-		print format(enc1[2],'02x'),
-	else:
-		print "failed",
-	print "Encoder2:",
-	if(enc2[0]==1):
-		print enc2[1],
-		print format(enc2[2],'02x'),
-	else:
-		print "failed " ,
-	print "Speed1:",
-	if(speed1[0]):
-		print speed1[1],
-	else:
-		print "failed",
-	print("Speed2:"),
-	if(speed2[0]):
-		print speed2[1]
-	else:
-		print "failed "
+    print("Encoder1:"),
+    if(enc1[0]==1):
+        print enc1[1],
+        print format(enc1[2],'02x'),
+    else:
+        print "failed",
+    print "Encoder2:",
+    if(enc2[0]==1):
+        print enc2[1],
+        print format(enc2[2],'02x'),
+    else:
+        print "failed " ,
+    print "Speed1:",
+    if(speed1[0]):
+        print speed1[1],
+    else:
+        print "failed",
+    print("Speed2:"),
+    if(speed2[0]):
+        print speed2[1]
+    else:
+        print "failed "
 
 
 
@@ -300,15 +300,15 @@ def driveForward(inch):
     rc.SpeedAccelDistanceM1(address,6000,6000,421*inch,1);
     rc.SpeedAccelDistanceM2(address,6000,6000,421*inch,1);
     buffers = (0,0,0)
-    while(buffers[1]!=0x80 and buffers[2]!=0x80):	#Loop until distance command has completed
-    	#displayspeed();
+    while(buffers[1]!=0x80 and buffers[2]!=0x80):   #Loop until distance command has completed
+        #displayspeed();
         speed1 = rc.ReadSpeedM1(address)
-    	speed2 = rc.ReadSpeedM2(address)
+        speed2 = rc.ReadSpeedM2(address)
 
         leftSpeeds = speed1 +leftSpeeds
         rightSpeeds = speed2 +rightSpeeds
         iter = iter+1
-    	buffers = rc.ReadBuffers(address)
+        buffers = rc.ReadBuffers(address)
 
     avgLeftSpeed = leftSpeeds/iter
     avgRightSpeed = rightSpeeds/iter
