@@ -172,35 +172,35 @@ def C02Angle(Co2_0,Co2_1,Co2_2,Co2_3):
 
     if position[i] == 1 & position[i+1] == 2:
         turnLeft(32,angle(sortedvalues[0],sortedvalues[1]))
-        return
+
 
     if position[i] == 1 & position[i+1] == 4:
         turnRight(32,angle(sortedvalues[0],sortedvalues[1]))
-        return
+
 
     if position[i] == 2 & position[i+1] == 1:
         turnLeft(32,90-angle(sortedvalues[0],sortedvalues[1]))
-        return
+
 
     if position[i] == 2 & position[i+1] == 3:
         turnLeft(32,90+angle(sortedvalues[0],sortedvalues[1]))
-        return
+
 
     if position[i] == 3 & position[i+1] == 2:
         turnLeft(32,180-angle(sortedvalues[0],sortedvalues[1]))
-        return
+
 
     if position[i] == 3 & position[i+1] == 4:
         turnRight(32,180-angle(sortedvalues[0],sortedvalues[1]))
-        return
+
 
     if position[i] == 4 & position[i+1] == 1:
         turnRight(32,90-angle(sortedvalues[0],sortedvalues[1]))
-        return
+
 
     if (position[i] == 4 & position[i+1] == 3):
         turnRight(32,90+angle(sortedvalues[0],sortedvalues[1]))
-        return
+
 
 def angle(sensor1,sensor2):
 
@@ -297,41 +297,44 @@ def driveForward(inch):
     iter = 0
     rc.ResetEncoders(address)
 
-    rc.SpeedAccelDistanceM1(address,6000,6000,421*inch,1);
-    rc.SpeedAccelDistanceM2(address,6000,6000,421*inch,1);
+    rc.SpeedAccelDistanceM1(address,3000,3000,421*inch,1);
+    rc.SpeedAccelDistanceM2(address,3000,3000,421*inch,1);
     buffers = (0,0,0)
     while(buffers[1]!=0x80 and buffers[2]!=0x80):   #Loop until distance command has completed
-        #displayspeed();
-        speed1 = rc.ReadSpeedM1(address)
-        speed2 = rc.ReadSpeedM2(address)
-
-        leftSpeeds = speed1 +leftSpeeds
-        rightSpeeds = speed2 +rightSpeeds
-        iter = iter+1
+        #displayspeed()
+        # speed1 = rc.ReadSpeedM1(address)
+        # speed2 = rc.ReadSpeedM2(address)
+        #
+        # leftSpeeds = (speed1) + (leftSpeeds)
+        # rightSpeeds = (speed2) + (rightSpeeds)
+        # iter = iter+1
         buffers = rc.ReadBuffers(address)
 
-    avgLeftSpeed = leftSpeeds/iter
-    avgRightSpeed = rightSpeeds/iter
-
+    # avgLeftSpeed = leftSpeeds/iter
+    # avgRightSpeed = rightSpeeds/iter
     time.sleep(.1)
 
-    return avgLeftSpeed,avgRightSpeed
+    # return avgLeftSpeed, avgRightSpeed
 
 
 def main():
     startup()
+
     print "waiting"
-    time.sleep(2)
+    time.sleep(5)
     print "GO!"
-    printSensorData()
-    Co2_0, Co2_1, Co2_2, Co2_3 = getCO2Data()
-    C02Angle(Co2_0, Co2_1, Co2_2, Co2_3)
-    vl, vr = driveForward(6)
-    accelX, accelY, accelZ  = bno.read_accelerometer()
-    gyroX, gyroY, gyroZ = bno.read_gyroscope()
-    Z = matrix([[float(accelX)], [float(accelY)], [float(gyroZ)]])
-    ts = .05
-    ekf(vl, vr, Z, ts)
+    for j in range(5):
+        printSensorData()
+        time.sleep(.1)
+        Co2_0, Co2_1, Co2_2, Co2_3 = getCO2Data()
+        C02Angle(Co2_0, Co2_1, Co2_2, Co2_3)
+        driveForward(3)
+        time.sleep(.5)
+        accelX, accelY, accelZ  = bno.read_accelerometer()
+        gyroX, gyroY, gyroZ = bno.read_gyroscope()
+        Z = matrix([[float(accelX)], [float(accelY)], [float(gyroZ)]])
+        ts = .05
+        # ekf(vl, vr, Z, ts)
 
 
 
