@@ -164,11 +164,11 @@ def C02Angle(Co2_0,Co2_1,Co2_2,Co2_3):
         print "Case 2"
 
     if sortedvalues[i] == Co2_2:
-        turnLeft(32, 90)
+        turnLeft(32, 180)
         print "Case 3"
 
     if sortedvalues[i] == Co2_3:
-        turnLeft(32, 180)
+        turnLeft(32, 90)
         print "Case 4"
     # i = 0
     # position = [1,2,3,4]
