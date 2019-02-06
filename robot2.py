@@ -153,11 +153,10 @@ def C02Angle(Co2_0,Co2_1,Co2_2,Co2_3):
 
     inital = [Co2_0,Co2_1,Co2_2,Co2_3]
 
-
+    i = 0
     sortedvalues = sorted(inital, reverse=True)
     print sortedvalues
     if sortedvalues[i] == Co2_0:
-        rc.ForwardMixed(address, 45)
         print "Case 1"
 
     if sortedvalues[i] == Co2_1:
