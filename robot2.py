@@ -150,84 +150,64 @@ def C02Angle(Co2_0,Co2_1,Co2_2,Co2_3):
     c = 11.25
     B = math.pi/4
 
-
     inital = [Co2_0,Co2_1,Co2_2,Co2_3]
 
     i = 0
     sortedvalues = sorted(inital, reverse=True)
+
     print sortedvalues
-    if sortedvalues[i] == Co2_0:
-        print "Case 1"
+    # if sortedvalues[i] == Co2_0:
+    #     print "Case 1"
+    #
+    # if sortedvalues[i] == Co2_1:    # turns right 90*
+    #     turnLeft(32, 360)
+    #     print "Case 2"
+    #
+    # if sortedvalues[i] == Co2_2:   #Backwards
+    #     turnRight(32, 180)
+    #     print "Case 3"
+    #
+    # if sortedvalues[i] == Co2_3:  #for turning right
+    #     turnRight(32, 90)
+    #     print "Case 4"
 
-    if sortedvalues[i] == Co2_1:
-        turnRight(32, 90)
-        print "Case 2"
+    ###### Angles
+    if sortedvalues[i] == Co2_0 and sortedvalues[i+1] == Co2_3:
+        goal = angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2])
+        turnRight(32,goal)
 
-    if sortedvalues[i] == Co2_2:
-        turnLeft(32, 180)
-        print "Case 3"
+    if sortedvalues[i] == Co2_1 and sortedvalues[i+1] == Co2_0:
+        goal = 90-angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2])
+        turnLeft(32,goal)
 
-    if sortedvalues[i] == Co2_3:
-        turnLeft(32, 90)
-        print "Case 4"
-    # i = 0
-    # position = [1,2,3,4]
-    # i = 0
-    # while i < 4:
-    #     if sortedvalues[i] == Co2_0:
-    #         position[i] = 1
-    #
-    #     elif sortedvalues[i] == Co2_1:
-    #         position[i] = 2
-    #
-    #     elif sortedvalues[i] == Co2_2:
-    #         position[i] = 3
-    #
-    #     elif sortedvalues[i] == Co2_3:
-    #         position[i] = 4
-    #
-    #     i = i + 1
-    #
-    # i = 1
-    #
-    # if position[i] == 1 & position[i+1] == 2:
-    #     print "1 2\n"
-    #     turnLeft(32,angle(sortedvalues[0],sortedvalues[1]))
-    #
-    #
-    # if position[i] == 1 & position[i+1] == 4:
-    #     print "1 4\n"
-    #     turnRight(32,angle(sortedvalues[0],sortedvalues[1]))
-    #
-    #
-    # if position[i] == 2 & position[i+1] == 1:
-    #     print "2 1\n"
-    #     turnLeft(32,90-angle(sortedvalues[0],sortedvalues[1]))
-    #
-    #
-    # if position[i] == 2 & position[i+1] == 3:
-    #     print "2 3\n"
-    #     turnLeft(32,90+angle(sortedvalues[0],sortedvalues[1]))
-    #
-    #
-    # if position[i] == 3 & position[i+1] == 2:
-    #     print "3 2\n"
-    #     turnLeft(32,180-angle(sortedvalues[0],sortedvalues[1]))
-    #
-    #
-    # if position[i] == 3 & position[i+1] == 4:
-    #     print "3 4\n"
-    #     turnRight(32,180-angle(sortedvalues[0],sortedvalues[1]))
-    #
-    #
-    # if position[i] == 4 & position[i+1] == 1:
-    #     print "4 1\n"
-    #     turnRight(32,90-angle(sortedvalues[0],sortedvalues[1]))
-    #
-    #
-    # if (position[i] == 4 & position[i+1] == 3):
-    #     print "4 3\n"
-    #     turnRight(32,90+angle(sortedvalues[0],sortedvalues[1]))
+    if sortedvalues[i] == Co2_1 and sortedvalues[i+1] == Co2_2:
+        goal = 90+angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2])
+        turnLeft(32,goal)
+
+    if sortedvalues[i] == Co2_2 and sortedvalues[i+1] == Co2_1:
+        goal = 180-angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2])
+        turnLeft(32,goal)
+
+    if sortedvalues[i] == Co2_2 and sortedvalues[i+1] == Co2_3:
+        goal = 180-angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2])
+        turnRight(32,goal)
+
+
+    if sortedvalues[i] == Co2_3 and sortedvalues[i+1] == Co2_0:
+        goal = 90-angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2])
+        turnRight(32,goal)
+
+    if sortedvalues[i] == Co2_3 and sortedvalues[i+1] == Co2_2:
+        goal = 90+angle(sortedvalues[0]-sortedvalues[2],sortedvalues[1]-sortedvalues[2])
+        turnRight(32,goal)
+
+    else:
+        a = 0
+        b = math.sqrt(a**2+c**2-(2*a*c*math.cos(B)))
+        A = math.acos((-a**2+b**2+c**2)/(2*b*c))
+
+        AngDeg = A*(180/math.pi)
+        return AngDeg
 
 
 def angle(sensor1,sensor2):
@@ -277,6 +257,11 @@ def displayspeed():
     else:
         print "failed "
 
+def getMotorSpeed():
+    speed1 = rc.ReadSpeedM1(address)
+    speed2 = rc.ReadSpeedM2(address)
+
+    return speed1[1], speed2[1]
 
 
 def getCO2Data():
@@ -329,20 +314,18 @@ def driveForward(inch):
     rc.SpeedAccelDistanceM2(address,3000,3000,421*inch,1);
     buffers = (0,0,0)
     while(buffers[1]!=0x80 and buffers[2]!=0x80):   #Loop until distance command has completed
-        #displayspeed()
-        # speed1 = rc.ReadSpeedM1(address)
-        # speed2 = rc.ReadSpeedM2(address)
-        #
-        # leftSpeeds = (speed1) + (leftSpeeds)
-        # rightSpeeds = (speed2) + (rightSpeeds)
-        # iter = iter+1
+        speed1, speed2 = getMotorSpeed()
+
+        leftSpeeds = (speed1) + (leftSpeeds)
+        rightSpeeds = (speed2) + (rightSpeeds)
+        iter = iter+1
         buffers = rc.ReadBuffers(address)
 
-    # avgLeftSpeed = leftSpeeds/iter
-    # avgRightSpeed = rightSpeeds/iter
+    avgLeftSpeed = leftSpeeds/iter
+    avgRightSpeed = rightSpeeds/iter
     time.sleep(.1)
 
-    # return avgLeftSpeed, avgRightSpeed
+    return avgLeftSpeed, avgRightSpeed
 
 
 def main():
@@ -356,13 +339,13 @@ def main():
         time.sleep(.1)
         Co2_0, Co2_1, Co2_2, Co2_3 = getCO2Data()
         C02Angle(Co2_0, Co2_1, Co2_2, Co2_3)
-        driveForward(1)
+        vl, vr = driveForward(1)
         time.sleep(.5)
         accelX, accelY, accelZ  = bno.read_accelerometer()
         gyroX, gyroY, gyroZ = bno.read_gyroscope()
         Z = matrix([[float(accelX)], [float(accelY)], [float(gyroZ)]])
         ts = .05
-        # ekf(vl, vr, Z, ts)
+        ekf(vl, vr, Z, ts)
 
 
 
