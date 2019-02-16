@@ -67,12 +67,17 @@ def startup():
 
 
 
-def ekf(vl, vr, Z, ts): #EKF function
+def ekf(vl, vr, Z, ts, x_i, y_i, theta_i, P): #EKF function
 #vl is velocity of left wheel
 #vr is velocity of right wheel
 #Z is the low pass filter (not used as of 2/1/19)
-    global xhat
-    global P
+    width = .35 #meters
+    sigmaD = 0
+    sigmaTheta = 0
+    sigmaX = float(.0001878)
+    sigmaY = float(.0002921)
+    sigmaOmega = float(.0000036774) #these probs need to change
+    R = matrix([[sigmaX,0,0],[0,sigmaY,0],[0,0,sigmaOmega]])
 
     ts = float(ts)
     xhat = matrix([[x_i, y_i, theta_i]])
@@ -108,7 +113,7 @@ def ekf(vl, vr, Z, ts): #EKF function
     #Process Error Update
     P = (numpy.identity(3)-(K.dot(C)))*P
 
-    return xhat
+    return xhat, P
 
 def lowpassfilter(Z, Z_filt):
     Z_filt = (.3758*Z)+(.6242*Z_filt)
@@ -333,19 +338,34 @@ def main():
 
     print "waiting"
     time.sleep(10)
+    x_i = 0
+    y_i = 0
+    theta_i = 0
+    sigmaTheta = 0
+    sigmaX = float(.0001878)
+    sigmaY = float(.0002921)
+    sigmaOmega = float(.0000036774) #these probs need to change
+    P = matrix([[sigmaX,0,0],[0,sigmaY,0],[0,0,sigmaOmega]])# init P matrix as R
     print "GO!"
+    #endCondtion = ....
+    #while !endCondtion
     for j in range(5):
         printSensorData()
         time.sleep(.1)
         Co2_0, Co2_1, Co2_2, Co2_3 = getCO2Data()
         C02Angle(Co2_0, Co2_1, Co2_2, Co2_3)
         vl, vr = driveForward(1)
+        print vl, vr
         time.sleep(.5)
         accelX, accelY, accelZ  = bno.read_accelerometer()
         gyroX, gyroY, gyroZ = bno.read_gyroscope()
         Z = matrix([[float(accelX)], [float(accelY)], [float(gyroZ)]])
         ts = .05
-        ekf(vl, vr, Z, ts)
+        xhat, P = ekf(vl, vr, Z, ts, x_i, y_i, theta_i, P)
+        x_i = xhat.item(0)
+        y_i = xhat.item(1)
+        theta_i = xhat.item(2)
+
 
 
 
