@@ -332,6 +332,20 @@ def driveForward(inch):
 
     return avgLeftSpeed, avgRightSpeed
 
+def endCondtion():
+    condition  = False
+    maxCo2 = 1000 #Find saturated sensor value
+    Co2_0, Co2_1, Co2_2, Co2_3 = getCO2Data()
+    maxed_0 = Co2_0 > maxCo2
+    maxed_1 = Co2_1 > maxCo2
+    maxed_2 = Co2_2 > maxCo2
+    maxed_3 = Co2_3 > maxCo2
+    saturated = maxed_0 and maxed_1 and maxed_2 and maxed_3
+    if(saturated):
+        condition = True
+
+    return condition
+
 
 def main():
     startup()
@@ -347,8 +361,8 @@ def main():
     sigmaOmega = float(.0000036774) #these probs need to change
     P = matrix([[sigmaX,0,0],[0,sigmaY,0],[0,0,sigmaOmega]])# init P matrix as R
     print "GO!"
-    #endCondtion = ....
-    #while !endCondtion
+    #endCon = endCondtion()
+    #while not endCon:
     for j in range(5):
         printSensorData()
         time.sleep(.1)
@@ -365,6 +379,8 @@ def main():
         x_i = xhat.item(0)
         y_i = xhat.item(1)
         theta_i = xhat.item(2)
+    print "Done!"
+    print xhat
 
 
 
