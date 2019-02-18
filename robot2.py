@@ -335,6 +335,9 @@ def driveForward(inch):
 
     avgLeftSpeed = leftSpeeds/iter
     avgRightSpeed = rightSpeeds/iter
+
+    avgLeftSpeed = avgLeftSpeed*((math.pi*2.975)/(1253)) #in/sec
+    avgRightSpeed avgRightSpeed*((math.pi*2.975)/(1253)) #in/sec
     time.sleep(.1)
 
     return avgLeftSpeed, avgRightSpeed
@@ -383,9 +386,9 @@ def main():
         Z = matrix([[float(accelX)], [float(accelY)], [float(gyroZ)]])
         ts = .05
         xhat, P = ekf(vl, vr, Z, ts, x_i, y_i, theta_i, P)
-        x_i = xhat.item(0)
-        y_i = xhat.item(1)
-        theta_i = xhat.item(2)
+        x_i = xhat.item(0) #position in inches
+        y_i = xhat.item(1) #position in inches
+        theta_i = xhat.item(2) #angle in rads?
         writer.writerow({'X' : x_i, 'Y' : y_i, 'Theta' : theta_i})
     print "Done!"
     print xhat
