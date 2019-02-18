@@ -22,6 +22,13 @@ rc = Roboclaw("/dev/ttyACM0",115200)
 rc.Open()
 address = 0x80
 
+startTime = time.strftime("%Y-%m-%d_%H:%M:%S")
+fileName = 'EKF_data_' + 'startTime' + '.csv'
+with open(fileName, mode='w') as csvfile:
+    entries = ['X','Y','Theta']
+    writer = csv.DictWriter(csvfile, fieldnames=entries)
+
+    writer.writeheader()
 
 def startup():
     #CO2 startup
@@ -334,7 +341,7 @@ def driveForward(inch):
 
 def endCondtion():
     condition  = False
-    maxCo2 = 1000 #Find saturated sensor value
+    maxCo2 = 5000 #Find saturated sensor value
     Co2_0, Co2_1, Co2_2, Co2_3 = getCO2Data()
     maxed_0 = Co2_0 > maxCo2
     maxed_1 = Co2_1 > maxCo2
@@ -379,6 +386,7 @@ def main():
         x_i = xhat.item(0)
         y_i = xhat.item(1)
         theta_i = xhat.item(2)
+        writer.writerow({'X' : x_i, 'Y' : y_i, 'Theta' : theta_i})
     print "Done!"
     print xhat
 
