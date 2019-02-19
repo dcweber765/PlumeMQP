@@ -23,12 +23,7 @@ rc.Open()
 address = 0x80
 
 startTime = time.strftime("%Y-%m-%d_%H:%M:%S")
-fileName = 'EKF_data_' + 'startTime' + '.csv'
-with open(fileName, mode='w') as csvfile:
-    entries = ['X','Y','Theta']
-    writer = csv.DictWriter(csvfile, fieldnames=entries)
 
-    writer.writeheader()
 
 def startup():
     #CO2 startup
@@ -337,7 +332,7 @@ def driveForward(inch):
     avgRightSpeed = rightSpeeds/iter
 
     avgLeftSpeed = avgLeftSpeed*((math.pi*0.075565)/(1253)) #m/sec
-    avgRightSpeed avgRightSpeed*((math.pi*0.075565)/(1253)) #m/sec
+    avgRightSpeed = avgRightSpeed*((math.pi*0.075565)/(1253)) #m/sec
     time.sleep(.1)
 
     return avgLeftSpeed, avgRightSpeed
@@ -373,23 +368,30 @@ def main():
     print "GO!"
     #endCon = endCondtion()
     #while not endCon:
-    for j in range(5):
-        printSensorData()
-        time.sleep(.1)
-        Co2_0, Co2_1, Co2_2, Co2_3 = getCO2Data()
-        C02Angle(Co2_0, Co2_1, Co2_2, Co2_3)
-        vl, vr = driveForward(1)
-        print vl, vr
-        time.sleep(.5)
-        accelX, accelY, accelZ  = bno.read_accelerometer()
-        gyroX, gyroY, gyroZ = bno.read_gyroscope()
-        Z = matrix([[float(accelX)], [float(accelY)], [float(gyroZ)]])
-        ts = .05
-        xhat, P = ekf(vl, vr, Z, ts, x_i, y_i, theta_i, P)
-        x_i = xhat.item(0) #position in meters
-        y_i = xhat.item(1) #position in meters
-        theta_i = xhat.item(2) #angle in rads?
-        writer.writerow({'X' : x_i, 'Y' : y_i, 'Theta' : theta_i})
+    fileName = 'EKF_data_' + startTime + '.csv'
+    with open(fileName, mode='w') as csvfile:
+        entries = ['X','Y','Theta']
+        writer = csv.DictWriter(csvfile, fieldnames=entries)
+
+        writer.writeheader()
+        for j in range(5):
+            printSensorData()
+            time.sleep(.1)
+            Co2_0, Co2_1, Co2_2, Co2_3 = getCO2Data()
+            C02Angle(Co2_0, Co2_1, Co2_2, Co2_3)
+            vl, vr = driveForward(1)
+            print vl, vr
+            time.sleep(.5)
+            accelX, accelY, accelZ  = bno.read_accelerometer()
+            gyroX, gyroY, gyroZ = bno.read_gyroscope()
+            Z = matrix([[float(accelX)], [float(accelY)], [float(gyroZ)]])
+            ts = .05
+            xhat, P = ekf(vl, vr, Z, ts, x_i, y_i, theta_i, P)
+            x_i = xhat.item(0) #position in meters
+            y_i = xhat.item(1) #position in meters
+            theta_i = xhat.item(2) #angle in rads?
+            print xhat
+            writer.writerow({'X' : x_i, 'Y' : y_i, 'Theta' : theta_i})
     print "Done!"
     print xhat
 
