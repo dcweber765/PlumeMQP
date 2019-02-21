@@ -24,14 +24,12 @@ def ekf(vl, vr, Z, ts, x_i, y_i, theta_i, P): #EKF function
     print Z
     ts = float(ts)
     xhat = matrix([[x_i], [y_i], [theta_i]])
-    print "start xhat"
-    print xhat
-    C = matrix([[1/(.001*ts**2),0,0],[0,1/(.001*ts**2),0],[0,0,1/(.001*ts**2)]])
-    print "C Matrix"
-    print C
+
+    C = matrix([[1/(ts**2),0,0],[0,1/(ts**2),0],[0,0,1/(ts)]])
+    
     #linearized change in pose for this discrete time step
-    dD = .5*.001*ts*(vl+vr)
-    dTh = (.001*ts*(vr-vl))/width
+    dD = .5*ts*(vl+vr)
+    dTh = (ts*(vr-vl))/width
 
     #state prediction
     xhat_p = matrix([[xhat.item(0)+dD* math.cos(xhat.item(2))], [xhat.item(1)+dD* math.sin(xhat.item(2))], [xhat.item(2)+dTh]])
@@ -69,8 +67,8 @@ def main():
     y_i = 0
     theta_i = 0
     sigmaTheta = 0
-    sigmaX = float(.0001878)
-    sigmaY = float(.0002921)
+    sigmaX = float(.0002)
+    sigmaY = float(.0002)
     sigmaOmega = float(.0000036774) #these probs need to change
     P = matrix([[sigmaX,0,0],[0,sigmaY,0],[0,0,sigmaOmega]])# init P matrix as R
     print "GO!"
@@ -83,12 +81,12 @@ def main():
 
         writer.writeheader()
         for j in range(5):
-            ts = .05
-            Z = matrix([[float(.25)], [float(.25)], [float(.5)]])
+            ts = .1
+            Z = matrix([[float(.25)], [float(.25)], [float(0)]])
             print "Z"
             print Z
-            vl = .07
-            vr = .02
+            vl = .7
+            vr = .7
             xhat, P = ekf(vl, vr, Z, ts, x_i, y_i, theta_i, P)
             x_i = xhat.item(0) #position in meters
             y_i = xhat.item(1) #position in meters
