@@ -2,14 +2,13 @@ import time
 import csv
 import logging
 import sys
-import serial
 import math
 import numpy
 from numpy import matrix
 from numpy import linalg
 
 
-startTime = time.strftime("%Y-%m-%d_%H:%M:%S")
+startTime = time.strftime("%Y.%m.%d_%H-%M-%S")
 
 def ekf(vl, vr, Z, ts, x_i, y_i, theta_i, P): #EKF function
 #vl is velocity of left wheel
@@ -22,11 +21,14 @@ def ekf(vl, vr, Z, ts, x_i, y_i, theta_i, P): #EKF function
     sigmaY = float(.0002921)
     sigmaOmega = float(.0000036774) #these probs need to change
     R = matrix([[sigmaX,0,0],[0,sigmaY,0],[0,0,sigmaOmega]])
-
+    print Z
     ts = float(ts)
-    xhat = matrix([[x_i, y_i, theta_i]])
+    xhat = matrix([[x_i], [y_i], [theta_i]])
+    print "start xhat"
+    print xhat
     C = matrix([[1/(.001*ts**2),0,0],[0,1/(.001*ts**2),0],[0,0,1/(.001*ts**2)]])
-
+    print "C Matrix"
+    print C
     #linearized change in pose for this discrete time step
     dD = .5*.001*ts*(vl+vr)
     dTh = (.001*ts*(vr-vl))/width
@@ -74,16 +76,20 @@ def main():
     print "GO!"
     #endCon = endCondtion()
     #while not endCon:
-    fileName = 'EKF_data_' + startTime + '.csv'
-    with open(fileName, mode='w') as csvfile:
+    fileName = 'C:\Users\Daniel\Documents\MQP\EKF_out\EKF_data_' + startTime + '.csv'
+    with open(fileName, mode='wb') as csvfile:
         entries = ['X','Y','Theta']
         writer = csv.DictWriter(csvfile, fieldnames=entries)
 
         writer.writeheader()
         for j in range(5):
             ts = .05
-            Z = 
-            xhat, P = ekf(vl, vr, ts, x_i, y_i, theta_i, P)
+            Z = matrix([[float(.25)], [float(.25)], [float(.5)]])
+            print "Z"
+            print Z
+            vl = .07
+            vr = .02
+            xhat, P = ekf(vl, vr, Z, ts, x_i, y_i, theta_i, P)
             x_i = xhat.item(0) #position in meters
             y_i = xhat.item(1) #position in meters
             theta_i = xhat.item(2) #angle in rads?

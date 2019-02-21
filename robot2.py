@@ -82,7 +82,7 @@ def ekf(vl, vr, Z, ts, x_i, y_i, theta_i, P): #EKF function
     R = matrix([[sigmaX,0,0],[0,sigmaY,0],[0,0,sigmaOmega]])
 
     ts = float(ts)
-    xhat = matrix([[x_i, y_i, theta_i]])
+    xhat = matrix([[x_i], [y_i], [theta_i]])
     C = matrix([[1/(.001*ts**2),0,0],[0,1/(.001*ts**2),0],[0,0,1/(.001*ts**2)]])
 
     #linearized change in pose for this discrete time step
