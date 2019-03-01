@@ -55,9 +55,9 @@ with open("CO2_SprintIR_riseTime.csv",mode='w') as csvfile:
     print('Zero Point Cal Air')
     time.sleep(1)
 
-    for x in range(120):
+    for x in range(1200):
         print x
-        Co2_0, Co2_1, Co2_2, Co2_3 = getCO2Data()
+        CO2_0, CO2_1, CO2_2, CO2_3 = getCO2Data()
         writer.writerow({'CO2_0': CO2_0, 'CO2_1': CO2_1, 'CO2_2': CO2_2, 'CO2_3':CO2_3, 'time': str(datetime.now().time())})
         time.sleep(0.1)
     print('Done!')
