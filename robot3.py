@@ -22,7 +22,7 @@ rc = Roboclaw("/dev/ttyACM0",115200)
 rc.Open()
 address = 0x80
 
-startTime = time.strftime("%Y-%m-%d_%H:%M:%S")
+startTime = time.strftime("%Y.%m.%d_%H-%M-%S")
 
 
 def startup():
@@ -369,8 +369,8 @@ def main():
 
     #endCon = endCondtion()
     #while not endCon:
-    fileName = 'EKF_Output_Data/EKF_data_' + startTime + '.csv'
-    with open(fileName, mode='w') as csvfile:
+    fileName = 'EKF_data_' + startTime + '.csv'
+    with open(fileName, mode='wb') as csvfile:
         entries = ['X','Y','Theta']
         writer = csv.DictWriter(csvfile, fieldnames=entries)
 
