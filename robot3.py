@@ -354,7 +354,7 @@ def endCondtion():
 
 def main():
     startup()
-
+    #autoreg-161306.dyn.wpi.edu
     print "waiting"
     time.sleep(10)
     x_i = 0
